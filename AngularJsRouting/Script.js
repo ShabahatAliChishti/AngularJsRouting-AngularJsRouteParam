@@ -6,20 +6,24 @@
         $routeProvider
             .when("/home", {
                 templateUrl: "Templates/home.html",
-                controller: "homeController"
+                //controller: "homeController as homeCtrl",
+          
+                  controller: "homeController",
+                        //2nd way
+                controllerAs: "homeCtrl"
             })
             .when("/courses", {
                 templateUrl: "Templates/courses.html",
-                controller: "coursesController"
+                controller: "coursesController as coursesCtrl"
             })
             .when("/students", {
                 templateUrl: "Templates/students.html",
-                controller: "studentsController"
+                controller: "studentsController as studentsCtrl"
             })
             //pass parameter using :
             .when("/students/:id", {
                 templateUrl: "Templates/studentDetails.html",
-                controller: "studentDetailsController"
+                controller: "studentDetailsController as studentDetailsCtrl"
             })
             .otherwise
             ({
@@ -32,26 +36,29 @@
         $locationProvider.html5Mode(true);
         
     })
-    .controller("homeController", function ($scope) {
-        $scope.message = "Home Page";
+    .controller("homeController", function () {
+        this.message = "Home Page";
     })
-    .controller("coursesController", function ($scope) {
-        $scope.courses = ["C#", "VB.NET", "ASP.NET", "SQL Server", "AngularJS", "JavaScript"];
+    .controller("coursesController", function () {
+        this.courses = ["C#", "VB.NET", "ASP.NET", "SQL Server", "AngularJS", "JavaScript"];
     })
-    .controller("studentsController", function ($scope, $http) {
+    .controller("studentsController", function ($http) {
+        var vm = this;
         $http.get("StudentService.asmx/GetAllStudents")
             .then(function (response) {
-                $scope.students = response.data;
+               vm.students = response.data;
             })
     })
-    .controller("studentDetailsController", function ($scope, $http, $routeParams) {
+    .controller("studentDetailsController", function ($http, $routeParams) {
+        var vm = this;
+
         $http({
             url: "StudentService.asmx/GetStudent",
             method: "get",
             //to retreive parameter value we use $routeParams object
             params: { id: $routeParams.id }
         }).then(function (response) {
-            $scope.student = response.data;
+            vm.student = response.data;
         })
 
     })

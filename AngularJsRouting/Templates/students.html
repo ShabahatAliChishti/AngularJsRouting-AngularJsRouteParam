@@ -2,13 +2,13 @@
 <h1>List of Students</h1>
 <ul>
     <li ng-repeat="student in students">
-        {{student.name}}
+        {{studentsCtrl.student.name}}
     </li>
 </ul>-->
 <!--angular js param example-->
 <h1>List of Students</h1>
 <ul>
-    <li ng-repeat="student in students">
+    <li ng-repeat="student in studentsCtrl.students">
         <!--//to get id of that student in url-->
         <a href="students/{{student.id}}">
             {{student.name}}
