@@ -43,19 +43,25 @@
         this.courses = ["C#", "VB.NET", "ASP.NET", "SQL Server", "AngularJS", "JavaScript"];
     })
     //$route service for reload route
-    .controller("studentsController", function ($http, $route, $scope) {
-        //event occur handled by on function
-        //parameters:event->object itself,next->taking information about next route that we are navigating to,current->information about current route
-        //we can use locationchangestart instead of routechange start it gives complete url of next route
-        $scope.$on("$routeChangeStart", function (event, next, current) {
-            //next.$$route.originalPath is use for getting orginal path in confirmaton box
-            if (!confirm("Are you sure you want to navigate away from this page to "
-                + next.$$route.originalPath)) {
-                //to cancel event and stay in page
-                event.preventDefault();
-            }
-        });
+    .controller("studentsController", function ($http, $route, $rootScope, $log) {
         var vm = this;
+
+        $rootScope.$on("$locationChangeStart", function () {
+            $log.debug("$locationChangeStart fired");
+        });
+
+        $rootScope.$on("$routeChangeStart", function () {
+            $log.debug("$routeChangeStart fired");
+        });
+
+        $rootScope.$on("$locationChangeSuccess", function () {
+            $log.debug("$locationChangeSuccess fired");
+        });
+
+        $rootScope.$on("$routeChangeSuccess", function () {
+            $log.debug("$routeChangeSuccess fired");
+        });
+
         vm.reloadData = function () {
             $route.reload();
         }
