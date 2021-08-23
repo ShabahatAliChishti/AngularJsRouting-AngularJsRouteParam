@@ -25,6 +25,12 @@
                 templateUrl: "Templates/studentDetails.html",
                 controller: "studentDetailsController as studentDetailsCtrl"
             })
+            .when("/studentsSearch/:name?", {
+                templateUrl: "Templates/studentsSearch.html",
+                controller: "studentsSearchController",
+                controllerAs: "studentsSearchCtrl"
+
+            })
             .otherwise
             ({
 
@@ -43,24 +49,16 @@
         this.courses = ["C#", "VB.NET", "ASP.NET", "SQL Server", "AngularJS", "JavaScript"];
     })
     //$route service for reload route
-    .controller("studentsController", function ($http, $route, $rootScope, $log) {
+    .controller("studentsController", function ($http, $route, $location, $rootScope, $log) {
         var vm = this;
 
-        $rootScope.$on("$locationChangeStart", function () {
-            $log.debug("$locationChangeStart fired");
-        });
+        vm.studentSearch = function () {
+            if (vm.name)
+                $location.url("/studentsSearch/" + vm.name)
+            else
+                $location.url("/studentsSearch")
+        }
 
-        $rootScope.$on("$routeChangeStart", function () {
-            $log.debug("$routeChangeStart fired");
-        });
-
-        $rootScope.$on("$locationChangeSuccess", function () {
-            $log.debug("$locationChangeSuccess fired");
-        });
-
-        $rootScope.$on("$routeChangeSuccess", function () {
-            $log.debug("$routeChangeSuccess fired");
-        });
 
         vm.reloadData = function () {
             $route.reload();
@@ -82,4 +80,23 @@
             vm.student = response.data;
         })
 
+    })
+    .controller("studentsSearchController", function ($http, $routeParams) {
+        var vm = this;
+        //if there is name parameter
+        if ($routeParams.name) {
+            $http({
+                url: "StudentService.asmx/GetStudentsByName",
+                method: "get",
+                params: { name: $routeParams.name }
+            }).then(function (response) {
+                vm.students = response.data;
+            })
+        }
+        else {
+            $http.get("StudentService.asmx/GetAllStudents")
+                .then(function (response) {
+                    vm.students = response.data;
+                })
+        }
     })

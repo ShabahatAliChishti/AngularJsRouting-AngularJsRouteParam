@@ -7,6 +7,10 @@
 </ul>-->
 <!--angular js param example-->
 <h1>List of Students</h1>
+
+Name:<input type="text" ng-model="studentsCtrl.name" />
+<!--//studentSearch call-->
+<button ng-click="studentsCtrl.studentSearch()">button</button>
 <ul>
     <li ng-repeat="student in studentsCtrl.students">
         <!--//to get id of that student in url-->
